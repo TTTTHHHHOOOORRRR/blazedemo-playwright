@@ -1,0 +1,13 @@
+# Maven
+target/
+
+# IDE
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Playwright browser cache
+playwright/
