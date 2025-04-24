@@ -1,21 +1,37 @@
 package pages;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.Select;
+import com.microsoft.playwright.*;
 
 public class LandingPage {
-    WebDriver driver;
+    private Page page;
 
-    public LandingPage(WebDriver driver) {
-        this.driver = driver;
+    public LandingPage(Page page) {
+        this.page = page;
     }
 
-    public void selectCities(String from, String to) {
-        new Select(driver.findElement(By.name("fromPort"))).selectByVisibleText(from);
-        new Select(driver.findElement(By.name("toPort"))).selectByVisibleText(to);
+    public void selectDepartureAndDestinationCities(String departure, String destination) {
+        // Replacing Selenium's Select with Playwright's Locator click method
+        page.locator("select#departureCity").selectOption(departure);
+        page.locator("select#destinationCity").selectOption(destination);
     }
 
-    public void clickFindFlights() {
-        driver.findElement(By.cssSelector("input[type='submit']")).click();
+    public void findFlights() {
+        // Click the "Find Flights" button using Playwright
+        page.locator("input[type='submit']").click();
+    }
+
+    public void chooseFlightWithLowestCost() {
+        // Example of selecting a flight based on cost
+        page.locator("tr.flight").locator("td.price").first().click();
+    }
+
+    public void fillAndSubmitForm(String name, String address, String city, String state, String zip) {
+        // Fill the form using Playwright Locators
+        page.locator("input[name='name']").fill(name);
+        page.locator("input[name='address']").fill(address);
+        page.locator("input[name='city']").fill(city);
+        page.locator("input[name='state']").fill(state);
+        page.locator("input[name='zip']").fill(zip);
+        page.locator("input[type='submit']").click();
     }
 }
