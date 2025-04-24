@@ -2,34 +2,45 @@ package tests;
 
 import com.microsoft.playwright.*;
 import org.testng.annotations.*;
-import pages.LandingPage;
 
 public class BlazeDemoTest {
-    Playwright playwright;
-    Browser browser;
-    Page page;
-    BrowserContext context;
-    LandingPage landingPage;
+    private Playwright playwright;
+    private Browser browser;
+    private BrowserContext context;
+    private Page page;
 
     @BeforeClass
     public void setup() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions()
+            .setHeadless(true)); // Important: Run in headless mode
+
         context = browser.newContext();
         page = context.newPage();
-        page.navigate("https://blazedemo.com");
-        landingPage = new LandingPage(page);
     }
 
     @Test
-    public void testFlightBooking() {
-        landingPage.selectCities("Boston", "New York");
-        landingPage.clickFindFlights();
+    public void testFlightSearch() {
+        page.navigate("https://blazedemo.com");
+
+        // Select departure city
+        page.selectOption("select[name='fromPort']", "Boston");
+
+        // Select destination city
+        page.selectOption("select[name='toPort']", "New York");
+
+        // Click Find Flights
+        page.click("input[type='submit']");
+
+        // Assert that the results page contains expected text
+        String title = page.textContent("h3");
+        assert title.contains("Flights from Boston to New York") : "Flight search failed!";
     }
 
     @AfterClass
-    public void tearDown() {
-        browser.close();
-        playwright.close();
+    public void teardown() {
+        if (browser != null) browser.close();
+        if (playwright != null) playwright.close();
     }
 }
