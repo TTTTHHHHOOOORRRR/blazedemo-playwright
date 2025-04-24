@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
 
 jobs:
   build:
@@ -35,6 +34,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
-
-      - name: Submit Maven dependency snapshot
-        uses: advanced-security/maven-dependency-submission-action@v3
