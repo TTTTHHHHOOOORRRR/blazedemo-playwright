@@ -1,37 +1,28 @@
 package pages;
 
-import com.microsoft.playwright.*;
+import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
 
 public class LandingPage {
-    private Page page;
+    private final Page page;
+
+    private final Locator fromCityDropdown;
+    private final Locator toCityDropdown;
+    private final Locator findFlightsButton;
 
     public LandingPage(Page page) {
         this.page = page;
+        this.fromCityDropdown = page.locator("select[name='fromPort']");
+        this.toCityDropdown = page.locator("select[name='toPort']");
+        this.findFlightsButton = page.locator("input[type='submit']");
     }
 
-    public void selectDepartureAndDestinationCities(String departure, String destination) {
-        // Replacing Selenium's Select with Playwright's Locator click method
-        page.locator("select#departureCity").selectOption(departure);
-        page.locator("select#destinationCity").selectOption(destination);
+    public void selectCities(String fromCity, String toCity) {
+        fromCityDropdown.selectOption(fromCity);
+        toCityDropdown.selectOption(toCity);
     }
 
-    public void findFlights() {
-        // Click the "Find Flights" button using Playwright
-        page.locator("input[type='submit']").click();
-    }
-
-    public void chooseFlightWithLowestCost() {
-        // Example of selecting a flight based on cost
-        page.locator("tr.flight").locator("td.price").first().click();
-    }
-
-    public void fillAndSubmitForm(String name, String address, String city, String state, String zip) {
-        // Fill the form using Playwright Locators
-        page.locator("input[name='name']").fill(name);
-        page.locator("input[name='address']").fill(address);
-        page.locator("input[name='city']").fill(city);
-        page.locator("input[name='state']").fill(state);
-        page.locator("input[name='zip']").fill(zip);
-        page.locator("input[type='submit']").click();
+    public void clickFindFlights() {
+        findFlightsButton.click();
     }
 }
